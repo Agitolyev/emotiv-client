@@ -3,7 +3,7 @@ import json
 import asyncio
 import websockets
 
-from emotiv_client.Config import Config
+from emotiv_client.config import Config
 from emotiv_client.dto import Request
 
 ssl_context = ssl._create_unverified_context()
