@@ -1,7 +1,7 @@
 import asyncio
 
 from emotiv_client.config import Config
-from emotiv_client.constant import BluetoothControlCommand
+from emotiv_client.constants import BluetoothControlCommand
 from emotiv_client.cortex_context import CortexContext
 
 

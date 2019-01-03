@@ -5,7 +5,7 @@ import asyncio
 import websockets
 from emotiv_client.config import Config
 from emotiv_client.dto import Request, Response
-from emotiv_client.constant import SessionStartStatus, BluetoothControlCommand
+from emotiv_client.constants import SessionStatus, BluetoothControlCommand
 
 
 class CortexContext(object):
@@ -52,10 +52,10 @@ class CortexContext(object):
         request = Request.of(method, params)
         await self._websocket.send(request.to_string())
 
-    async def get_license_info(self, token):
+    async def get_license_info(self, auth_token):
         method = "getLicenseInfo"
         params = {
-            "_auth": token
+            "_auth": auth_token
         }
         request = Request.of(method, params)
         await self._websocket.send(request.to_string())
@@ -69,14 +69,68 @@ class CortexContext(object):
         request = Request.of(method, params)
         await self._websocket.send(request.to_string())
 
-    async def create_emotiv_session(self, token, status: SessionStartStatus, project=None, title=None, subject=None):
+    async def create_session(self, auth_token, **kwargs):
+        """
+        Creates a new session with status "open"
+        :param auth_token: authentication token
+        :param kwargs                       optional session update request parameters :
+               headset          : (string)  Headset ID link with session (if not set Cortex will link with first headset connected)
+               project          : (string)  Project name for session
+               title            : (string)  Title name for session
+               subject          : (string)  Reserved for future use
+               experimentID     : (number)  specific experiment id for the application
+
+        Detailed description may be found here - https://emotiv.github.io/cortex-docs/#updatesession
+        """
+
         method = "createSession"
         params = {
-            "_auth": token,
-            "status": status.value,
-            "project": project,
-            "title": title,
-            "subject": subject
+            "_auth": auth_token,
+            "status": SessionStatus.OPEN.value
+        }
+        # Merge required params with optional ones
+        params = {**params, **kwargs}
+
+        request = Request.of(method, params)
+        await self._websocket.send(request.to_string())
+
+    async def update_session(self, auth_token, status: SessionStatus, **kwargs):
+        """
+        Updates an existing session
+        :param auth_token       : (string)           authentication token
+        :param status           : (string)           New session status ("open", "close", "active")
+        :param kwargs                                optional session update request parameters :
+               session          : (string)           session id. If this param not set, Cortex will get first session in session list do not close
+               recordingName    : (string)
+               recordingNote    : (string)
+               recordingSubject : (string)
+               tags             : (array of strings)
+
+        Detailed description may be found here - https://emotiv.github.io/cortex-docs/#updatesession
+        """
+
+        method = "updateSession"
+        params = {
+            "_auth": auth_token,
+            "status": status.value
+        }
+        request = Request.of(method, params)
+        await self._websocket.send(request.to_string())
+
+    async def get_sessions(self, auth_token):
+        method = "querySessions"
+        params = {
+            "_auth": auth_token
+        }
+        request = Request.of(method, params)
+        await self._websocket.send(request.to_string())
+
+    async def subscribe(self, auth_token, session_id, data_streams: list):
+        method = "subscribe"
+        params = {
+            "_auth": auth_token,
+            "session": session_id,
+            "streams": [channel.value for channel in data_streams]
         }
         request = Request.of(method, params)
         await self._websocket.send(request.to_string())
