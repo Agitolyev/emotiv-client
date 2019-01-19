@@ -8,7 +8,7 @@ from emotiv_client.cortex_context import CortexContext
 if __name__ == '__main__':
     context = CortexContext()
 
-    context.authorize(Config.CLIENT_ID, Config.CLIENT_SECRET, Config.LICENSE)
+    asyncio.get_event_loop().run_until_complete(context.authorize(Config.CLIENT_ID, Config.CLIENT_SECRET, Config.LICENSE))
     auth_resp = asyncio.get_event_loop().run_until_complete(context.next())
     auth_token = auth_resp.result['_auth']
 
