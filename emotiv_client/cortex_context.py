@@ -117,10 +117,12 @@ class CortexContext(object):
         request = Request.of(method, params)
         await self._websocket.send(request.to_string())
 
-    async def get_sessions(self, auth_token):
+    async def get_sessions(self, auth_token, **kwargs):
         method = "querySessions"
+
         params = {
-            "_auth": auth_token
+            "_auth": auth_token,
+            "query": kwargs
         }
         request = Request.of(method, params)
         await self._websocket.send(request.to_string())
