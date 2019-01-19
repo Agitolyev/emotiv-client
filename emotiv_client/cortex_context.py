@@ -22,6 +22,8 @@ class CortexContext(object):
         request = Request.of(method, params)
         await self._websocket.send(request.to_string())
 
+        return request
+
     async def login(self, uname, password, client_id, client_secret):
         method = "login"
         params = {
@@ -32,6 +34,8 @@ class CortexContext(object):
         }
         request = Request.of(method, params)
         await self._websocket.send(request.to_string())
+
+        return request
 
     async def authorize(self, client_id, client_secret, license, debit=0):
         method = "authorize"
@@ -44,6 +48,8 @@ class CortexContext(object):
         request = Request.of(method, params)
         await self._websocket.send(request.to_string())
 
+        return request
+
     async def generate_new_token(self, token):
         method = "generateNewToken"
         params = {
@@ -51,6 +57,8 @@ class CortexContext(object):
         }
         request = Request.of(method, params)
         await self._websocket.send(request.to_string())
+
+        return request
 
     async def get_license_info(self, auth_token):
         method = "getLicenseInfo"
@@ -60,6 +68,9 @@ class CortexContext(object):
         request = Request.of(method, params)
         await self._websocket.send(request.to_string())
 
+        return request
+
+
     async def control_bluetooth_headset(self, command: BluetoothControlCommand,  headset_id=None):
         method = "controlBluetoothHeadset"
         params = {
@@ -68,6 +79,8 @@ class CortexContext(object):
         }
         request = Request.of(method, params)
         await self._websocket.send(request.to_string())
+
+        return request
 
     async def create_session(self, auth_token, **kwargs):
         """
@@ -94,6 +107,8 @@ class CortexContext(object):
         request = Request.of(method, params)
         await self._websocket.send(request.to_string())
 
+        return request
+
     async def update_session(self, auth_token, status: SessionStatus, **kwargs):
         """
         Updates an existing session
@@ -117,6 +132,8 @@ class CortexContext(object):
         request = Request.of(method, params)
         await self._websocket.send(request.to_string())
 
+        return request
+
     async def get_sessions(self, auth_token, **kwargs):
         method = "querySessions"
 
@@ -127,6 +144,8 @@ class CortexContext(object):
         request = Request.of(method, params)
         await self._websocket.send(request.to_string())
 
+        return request
+
     async def subscribe(self, auth_token, session_id, data_streams: list):
         method = "subscribe"
         params = {
@@ -136,6 +155,8 @@ class CortexContext(object):
         }
         request = Request.of(method, params)
         await self._websocket.send(request.to_string())
+
+        return request
 
     async def next(self) -> Response:
         return Response.of_json(json.loads(await self._websocket.recv()))
