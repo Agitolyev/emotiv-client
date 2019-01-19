@@ -14,10 +14,11 @@ if __name__ == '__main__':
                                                                   Config.CLIENT_SECRET,
                                                                   Config.LICENSE))
     auth_resp = asyncio.get_event_loop().run_until_complete(context.next())
+    print(auth_resp.to_string(pretty=True))
     auth_token = auth_resp.result['_auth']
 
     while True:
-        asyncio.get_event_loop().run_until_complete(context.get_sessions(auth_token))
+        asyncio.get_event_loop().run_until_complete(context.get_sessions(auth_token, status='closed'))
         resp_sessions = asyncio.get_event_loop().run_until_complete(context.next())
         print(resp_sessions.to_string(pretty=True))
         time.sleep(10)
