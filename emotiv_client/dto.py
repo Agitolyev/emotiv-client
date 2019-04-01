@@ -11,8 +11,8 @@ class Request(object):
         self.method = method
         self.params = kwargs
 
-    def to_string(self):
-        return json.dumps(self.__dict__)
+    def to_string(self, pretty=False):
+        return json.dumps(self.__dict__) if not pretty else json.dumps(self.__dict__, indent=4)
 
     @classmethod
     def of(cls, method: str, params: dict):
