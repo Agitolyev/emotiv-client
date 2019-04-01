@@ -8,7 +8,9 @@ from emotiv_client.cortex_context import CortexContext
 if __name__ == '__main__':
     context = CortexContext()
 
-    asyncio.get_event_loop().run_until_complete(context.control_bluetooth_headset(BluetoothControlCommand.CONNECT,
+    request = asyncio.get_event_loop().run_until_complete(context.control_bluetooth_headset(BluetoothControlCommand.CONNECT,
                                                                                   Config.DEVICE_ID))
+    print(request.to_string(pretty=True))
+
     bl_connect_resp = asyncio.get_event_loop().run_until_complete(context.next())
     print(bl_connect_resp.to_string(pretty=True))
