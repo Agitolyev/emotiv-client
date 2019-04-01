@@ -18,8 +18,9 @@ if __name__ == '__main__':
     auth_token = auth_resp.result['_auth']
 
     while True:
-        asyncio.get_event_loop().run_until_complete(context.get_sessions(auth_token, status='closed'))
+        asyncio.get_event_loop().run_until_complete(context.get_sessions(auth_token))
         resp_sessions = asyncio.get_event_loop().run_until_complete(context.next())
-        print(resp_sessions.to_string(pretty=True))
+        for session in resp_sessions.result:
+            print(f'AppId: {session["appId"]}, Status: {session["status"]}')
         time.sleep(10)
 
